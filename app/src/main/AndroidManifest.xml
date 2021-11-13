@@ -11,6 +11,8 @@
         android:theme="@style/Theme.Android_Project">
         <activity
             android:name=".GameActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity

@@ -1,54 +1,56 @@
 package com.example.android_project;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 public class Projectile {
 
-    private ImageView imageView;// ImageView of the projectile
-    private float[] position;   // Position of the ImageView, contains the X and Y position
-    private float[] size;       // Size of the ImageView, contains the weight and the height
-    private Drawable icon;      // Drawable ressource of the ImageView
+    private float piouPosX;
+    private float piouPosY;
+    Bitmap bitmap;
 
-    public Projectile(ImageView imageView, float[] position, float[] size, Drawable icon) {
-        this.imageView = imageView;
-        this.position = position;
-        this.size = size;
-        this.icon = icon;
+    private float velocity;
 
-        imageView.setImageDrawable(icon);
+    public Projectile(float piouPosX, float piouPosY, Bitmap bitmap) {
+        this.piouPosX = piouPosX;
+        this.piouPosY = piouPosY;
+        this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.55), (int) (bitmap.getHeight() * 0.55), true);;
+        this.velocity = 10;
     }
 
-
-    public ImageView getImageView() {
-        return imageView;
+    public float getPiouPosX() {
+        return piouPosX;
     }
 
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
+    public void setPiouPosX(float piouPosX) {
+        this.piouPosX = piouPosX;
     }
 
-    public float[] getPosition() {
-        return position;
+    public float getPiouPosY() {
+        return piouPosY;
     }
 
-    public void setPosition(float[] position) {
-        this.position = position;
+    public void setPiouPosY(float piouPosY) {
+        this.piouPosY = piouPosY;
     }
 
-    public float[] getSize() {
-        return size;
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
-    public void setSize(float[] size) {
-        this.size = size;
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
-    public Drawable getIcon() {
-        return icon;
+    public float getVelocity() {
+        return velocity;
     }
 
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
     }
 }
+
+
+
