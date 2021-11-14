@@ -11,7 +11,7 @@ public class SpaceShip {
     public SpaceShip(float shipPosX, float shipPosY, Bitmap bitmap) {
         this.shipPosX = shipPosX;
         this.shipPosY = shipPosY;
-        this.bitmap = bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.3), (int) (bitmap.getHeight() * 0.3), true);;
+        this.bitmap = bitmap;
     }
 
     public float getShipPosX() {

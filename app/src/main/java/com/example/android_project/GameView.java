@@ -5,11 +5,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -45,6 +52,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void start(){
 
+        hideSystemUI();
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -61,8 +69,8 @@ public class GameView extends SurfaceView implements Runnable {
         shipIconWidth  = ship.getWidth();
         shipIconHeight = ship.getHeight();
 
-        piouIconWidth  = pPiou.getWidth();
-        piouIconHeight = pPiou.getHeight();
+        //piouIconWidth  = pPiou.getWidth();
+        //piouIconHeight = pPiou.getHeight();
 
         spaceShip = new SpaceShip(MainActivity.SCREEN_WIDTH /2 - shipIconWidth / 2, MainActivity.SCREEN_HEIGHT /2 + shipIconHeight, ship);
         projectileManager = new ProjectileManager(appCompatActivity, spaceShip);
@@ -88,6 +96,7 @@ public class GameView extends SurfaceView implements Runnable {
         Canvas canvas;
 
         long timeMillis = System.currentTimeMillis();
+        projectileManager.start();
 
         score = 0;
         while(!gameOver && isRunning){
@@ -95,11 +104,19 @@ public class GameView extends SurfaceView implements Runnable {
                 canvas = surfaceHolder.lockCanvas();
                 canvas.save();
 
-                canvas.drawBitmap(bg, 0, 0, paint);
-                canvas.drawBitmap(ship, spaceShip.getShipPosX(), spaceShip.getShipPosY(), paint);
+                canvas.drawBitmap(bg, 0, 0, paint);                                        // Affiche l'image de fond d'écran (espace) sur le Canvas
+                canvas.drawBitmap(ship, spaceShip.getShipPosX(), spaceShip.getShipPosY(), paint);   // Affiche le vaisseau à sa position définie dans la classe SpaceShip
 
-                for(Projectile p: projectileManager.getPiouList()){
-                    canvas.drawBitmap(p.getBitmap(), p.getPiouPosX(), p.getPiouPosY(), paint);
+                List<Projectile> piouList = projectileManager.getPiouList();
+                for(Projectile p: piouList){
+                    if(p.getPiouPosY() < -1000){
+                        piouList.remove(p);
+                        Log.e("piou", "Piou sorti de l'écran, supprimé");
+                        break;
+                    }
+                    canvas.drawBitmap(p.getBitmap(), p.getPiouPosX(), p.getPiouPosY(), paint);  // Affiche chaque projectile sur le Canvas
+                    p.setPiouPosY(p.getPiouPosY() - p.getVelocity());                         // Permet d'actualiser la position de chaque projectile (en Y) suivant leur vitesse
+
                 }
 
                 //canvas.drawBitmap(pPiou, spaceShip.getShipPosX() + shipIconWidth / 2 - piouIconWidth / 2, spaceShip.getShipPosY() - piouIconHeight, paint);
@@ -125,13 +142,16 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
-    private AppCompatActivity getAppCompatActivity() {
-        return appCompatActivity;
-    }
-
-    private void dpToPixel(int dps){
-        final float scale = getContext().getResources().getDisplayMetrics().density;
-        int pixels = (int) (dps * scale + 0.5f);
+    private void hideSystemUI() {
+        ActionBar actionBar = appCompatActivity.getSupportActionBar();
+        if (actionBar != null) actionBar.hide();
+        appCompatActivity.getWindow().getDecorView().setSystemUiVisibility(
+                  View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
 }

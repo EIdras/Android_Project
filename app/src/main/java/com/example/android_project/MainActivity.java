@@ -21,12 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         playBtn = findViewById(R.id.playBtn);
 
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openActivity(GameActivity.class);
-            }
-        });
+        playBtn.setOnClickListener(v -> openActivity(GameActivity.class));
 
         Point metrics = new Point();
         getWindowManager().getDefaultDisplay().getRealSize(metrics);

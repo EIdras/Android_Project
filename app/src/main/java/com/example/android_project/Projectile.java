@@ -15,8 +15,8 @@ public class Projectile {
     public Projectile(float piouPosX, float piouPosY, Bitmap bitmap) {
         this.piouPosX = piouPosX;
         this.piouPosY = piouPosY;
-        this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.55), (int) (bitmap.getHeight() * 0.55), true);;
-        this.velocity = 10;
+        this.bitmap = bitmap;
+        this.velocity = 40;
     }
 
     public float getPiouPosX() {
@@ -49,6 +49,14 @@ public class Projectile {
 
     public void setVelocity(float velocity) {
         this.velocity = velocity;
+    }
+
+    @Override
+    public String toString() {
+        return "Projectile{" +
+                "piouPosX=" + piouPosX +
+                ", piouPosY=" + piouPosY +
+                '}';
     }
 }
 

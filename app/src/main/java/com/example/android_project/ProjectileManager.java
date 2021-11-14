@@ -2,6 +2,7 @@ package com.example.android_project;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +12,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ProjectileManager {
+
+    private static int shootFrequency = 300;
 
     private GameActivity appCompatActivity;
     private List<Projectile> piouList = new ArrayList<Projectile>();
@@ -23,7 +26,7 @@ public class ProjectileManager {
         this.spaceShip = spaceShip;
 
         this.pPiou = BitmapFactory.decodeResource(appCompatActivity.getResources(), R.drawable.piou);
-        this.pPiou = Bitmap.createScaledBitmap(pPiou, (int) (pPiou.getWidth() * 0.55), (int) (pPiou.getHeight() * 0.55), true);
+        this.pPiou = Bitmap.createScaledBitmap(pPiou, (int) (pPiou.getWidth() * 0.6), (int) (pPiou.getHeight() * 0.6), true);
     }
 
     private Timer timer;
@@ -34,8 +37,9 @@ public class ProjectileManager {
         public void run() {
             // Les instructions suivantes sont exécutées à intervalle régulier
 
-            piou = new Projectile(spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - piou.getBitmap().getWidth() / 2,
-                    spaceShip.getShipPosY() - piou.getBitmap().getHeight(),
+            piou = new Projectile(
+                    spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - pPiou.getWidth() / 2,
+                    spaceShip.getShipPosY() - pPiou.getHeight(),
                     pPiou);
 
             piouList.add(piou);
@@ -48,7 +52,7 @@ public class ProjectileManager {
             return;
         }
         timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 2000);
+        timer.scheduleAtFixedRate(timerTask, 0, shootFrequency);
     }
 
     public void stop() {
