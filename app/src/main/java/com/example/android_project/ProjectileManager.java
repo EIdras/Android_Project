@@ -13,7 +13,7 @@ import java.util.TimerTask;
 
 public class ProjectileManager {
 
-    private static int shootFrequency = 300;
+    private static int shootFrequency = 200;
 
     private GameActivity appCompatActivity;
     private List<Projectile> piouList = new ArrayList<Projectile>();
