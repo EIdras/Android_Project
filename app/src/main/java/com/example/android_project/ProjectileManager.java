@@ -2,9 +2,6 @@ package com.example.android_project;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +10,10 @@ import java.util.TimerTask;
 
 public class ProjectileManager {
 
-    private static int shootFrequency = 200;
+    private static int shootFrequency = 150;
 
     private GameActivity appCompatActivity;
-    private List<Projectile> piouList = new ArrayList<Projectile>();
+    private List<Projectile> playerPiouList = new ArrayList<Projectile>();
     private Projectile piou;
     private Bitmap pPiou;
     private SpaceShip spaceShip;
@@ -31,28 +28,34 @@ public class ProjectileManager {
 
     private Timer timer;
 
-    private TimerTask timerTask = new TimerTask() {
 
-        @Override
-        public void run() {
-            // Les instructions suivantes sont exécutées à intervalle régulier
+        private TimerTask timerTask = new TimerTask() {
 
-            piou = new Projectile(
-                    spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - pPiou.getWidth() / 2,
-                    spaceShip.getShipPosY() - pPiou.getHeight(),
-                    pPiou);
+            @Override
+            public void run() {
+                // Les instructions suivantes sont exécutées à intervalle régulier
 
-            piouList.add(piou);
+                piou = new Projectile(
+                        spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - pPiou.getWidth() / 2,
+                        spaceShip.getShipPosY() - pPiou.getHeight(),
+                        pPiou);
 
-        }
-    };
+                synchronized (playerPiouList) {
+                    playerPiouList.add(piou);
+                }
+            }
+        };
+
+
 
     public void start() {
-        if(timer != null) {
+        if (timer != null) {
             return;
         }
         timer = new Timer();
+
         timer.scheduleAtFixedRate(timerTask, 0, shootFrequency);
+
     }
 
     public void stop() {
@@ -61,11 +64,11 @@ public class ProjectileManager {
     }
 
     public List<Projectile> getPiouList() {
-        return piouList;
+        return playerPiouList;
     }
 
     public void setPiouList(List<Projectile> piouList) {
-        this.piouList = piouList;
+        this.playerPiouList = piouList;
     }
 
     public Bitmap getpPiou() {
@@ -75,4 +78,6 @@ public class ProjectileManager {
     public void setpPiou(Bitmap pPiou) {
         this.pPiou = pPiou;
     }
+
+
 }
