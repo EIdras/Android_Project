@@ -1,5 +1,6 @@
 package com.example.android_project;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getRealSize(metrics);
         SCREEN_WIDTH = metrics.x;
         SCREEN_HEIGHT = metrics.y;
+
     }
 
     public void openActivity(Class classToOpen){

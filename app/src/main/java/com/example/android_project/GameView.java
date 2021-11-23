@@ -1,26 +1,20 @@
 package com.example.android_project;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.Region;
-import android.util.DisplayMetrics;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
@@ -36,7 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     Paint paint;
 
-    SpaceShip spaceShip;
+    SpaceShip playerShip;
     ProjectileManager projectileManager;
     float shipIconWidth, shipIconHeight,
             bgIconHeight;
@@ -49,6 +43,7 @@ public class GameView extends SurfaceView implements Runnable {
         this.appCompatActivity = appCompatActivity;
         surfaceHolder = getHolder();
         path = new Path();
+
     }
 
     public void start(){
@@ -70,8 +65,14 @@ public class GameView extends SurfaceView implements Runnable {
         shipIconWidth  = ship.getWidth();
         shipIconHeight = ship.getHeight();
 
-        spaceShip = new SpaceShip(MainActivity.SCREEN_WIDTH /2 - shipIconWidth / 2, MainActivity.SCREEN_HEIGHT /2 + shipIconHeight, ship);
-        projectileManager = new ProjectileManager(appCompatActivity, spaceShip);
+        playerShip = new SpaceShip(MainActivity.SCREEN_WIDTH /2 - shipIconWidth / 2, MainActivity.SCREEN_HEIGHT /2 + shipIconHeight, ship);
+        projectileManager = new ProjectileManager(appCompatActivity, playerShip);
+
+
+        Bitmap bitmap = Bitmap.createBitmap(24, 24, Bitmap.Config.ARGB_8888);
+        bitmap.eraseColor(Color.MAGENTA);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+        appCompatActivity.getWindow().setBackgroundDrawable(bitmapDrawable);
 
     }
     public void pause(){
@@ -99,12 +100,19 @@ public class GameView extends SurfaceView implements Runnable {
         score = 0;
         while(!gameOver && isRunning){
             if (surfaceHolder.getSurface().isValid()) {
+
+                // POUR TESTER
+                if(Math.random() < 0.08) {
+                    Log.e("health", "Vie du joueur - "+playerShip.getHealth()+" / 100 HP");
+                    playerShip.setHealth(playerShip.getHealth()-1);
+                }
+
                 canvas = surfaceHolder.lockCanvas();
                 canvas.drawColor(Color.BLACK); // Pour 'clear' le canvas
                 canvas.save();
 
                 canvas.drawBitmap(bg, 0, 0, paint);                                         // Affiche l'image de fond d'écran (espace) sur le Canvas
-                canvas.drawBitmap(ship, spaceShip.getShipPosX(), spaceShip.getShipPosY(), paint);   // Affiche le vaisseau à sa position définie dans la classe SpaceShip
+                canvas.drawBitmap(ship, playerShip.getShipPosX(), playerShip.getShipPosY(), paint);   // Affiche le vaisseau à sa position définie dans la classe SpaceShip
                 drawLifeBar(canvas);
 
 
@@ -124,8 +132,15 @@ public class GameView extends SurfaceView implements Runnable {
                 path.rewind();
                 canvas.restore();
                 surfaceHolder.unlockCanvasAndPost(canvas);
+                isGameOver();
             }
 
+        }
+    }
+
+    private void isGameOver() {
+        if (playerShip.getHealth() <= 0){
+            gameOver = true;
         }
     }
 
@@ -135,8 +150,8 @@ public class GameView extends SurfaceView implements Runnable {
                 float pointX = event.getX();
                 float pointY = event.getY();
 
-                spaceShip.setShipPosX(pointX - shipIconWidth/2);
-                spaceShip.setShipPosY(pointY - shipIconWidth/2);
+                playerShip.setShipPosX(pointX - shipIconWidth/2);
+                playerShip.setShipPosY(pointY - shipIconWidth/2);
                 return true;
 
     }
@@ -151,24 +166,38 @@ public class GameView extends SurfaceView implements Runnable {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        appCompatActivity.getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
     }
 
 
-    private void drawLifeBar(Canvas canvas){
-        float padding = 100;                // Marge entre la barre de vie et les bords de l'écran
-        float vSize = 80;                   // Hauteur de la barre de vie
-        float barPadd = 10;                 // Marge entre la barre blanche et la verte
-        float x1 = padding;
-        float y1 = MainActivity.SCREEN_HEIGHT - padding - vSize;
-        float x2 = MainActivity.SCREEN_WIDTH - padding;
-        float y2 = MainActivity.SCREEN_HEIGHT - padding;
+    // Variables pour la barre de vie
+    float padding = 100;                                // Marge entre la barre de vie et les bords de l'écran
+    float vSize = 80;                                   // Hauteur de la barre de vie
+    float barPadd = 10;                                 // Marge entre la barre blanche et la verte
+    float greenBarSize = MainActivity.SCREEN_WIDTH      // Taille totale de la barre verte
+            - 2 * padding - 2 * barPadd;
 
+    float x1 = padding;
+    float y1 = MainActivity.SCREEN_HEIGHT - padding - vSize;
+    float x2 = MainActivity.SCREEN_WIDTH - padding;
+    float y2 = MainActivity.SCREEN_HEIGHT - padding;
+
+    private void drawLifeBar(Canvas canvas){
+
+
+        int maxHP       = SpaceShip.MAX_HEALTH  ;
+        int actualHP    = playerShip.getHealth();
+        float ratioHP     = (float) actualHP / maxHP   ;
 
         paint.setStrokeWidth(1);
+        // La barre blanche est simplement un cadre
         paint.setColor(Color.WHITE);
         canvas.drawRect(x1, y1, x2, y2, paint);
+
+        // La barre verte représente la vie du joueur
         paint.setColor(Color.GREEN);
-        canvas.drawRect(x1+barPadd, y1+barPadd, x2-barPadd, y2-barPadd, paint);
+
+        canvas.drawRect(x1+barPadd, y1+barPadd, (padding+barPadd+greenBarSize)*ratioHP, y2-barPadd, paint);
 
     }
 

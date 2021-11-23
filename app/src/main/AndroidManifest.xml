@@ -13,6 +13,7 @@
             android:name=".GameActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
+            android:fitsSystemWindows="false"
             android:exported="true"
             android:theme="@style/fullscreen"/>
         <activity

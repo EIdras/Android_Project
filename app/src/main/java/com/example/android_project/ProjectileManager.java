@@ -10,7 +10,7 @@ import java.util.TimerTask;
 
 public class ProjectileManager {
 
-    private static int shootFrequency = 800;
+    private static int shootFrequency = 650;
 
     private GameActivity appCompatActivity;
     private SoundManager soundManager;
@@ -35,6 +35,7 @@ public class ProjectileManager {
             @Override
             public void run() {
                 // Les instructions suivantes sont exécutées à intervalle régulier
+                // L'intervalle en question est spécifié par la variable 'shootFrequency'
 
                 piou = new Projectile(
                         spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - pPiou.getWidth() / 2,

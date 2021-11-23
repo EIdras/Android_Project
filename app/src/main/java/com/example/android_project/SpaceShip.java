@@ -4,14 +4,17 @@ import android.graphics.Bitmap;
 
 public class SpaceShip {
 
+    public static final int MAX_HEALTH = 100;
     private float shipPosX;
     private float shipPosY;
     Bitmap bitmap;
+    int health;
 
     public SpaceShip(float shipPosX, float shipPosY, Bitmap bitmap) {
         this.shipPosX = shipPosX;
         this.shipPosY = shipPosY;
         this.bitmap = bitmap;
+        this.health = MAX_HEALTH;
     }
 
     public float getShipPosX() {
@@ -36,5 +39,13 @@ public class SpaceShip {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 }
