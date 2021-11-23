@@ -10,9 +10,10 @@ import java.util.TimerTask;
 
 public class ProjectileManager {
 
-    private static int shootFrequency = 150;
+    private static int shootFrequency = 800;
 
     private GameActivity appCompatActivity;
+    private SoundManager soundManager;
     private List<Projectile> playerPiouList = new ArrayList<Projectile>();
     private Projectile piou;
     private Bitmap pPiou;
@@ -24,10 +25,10 @@ public class ProjectileManager {
 
         this.pPiou = BitmapFactory.decodeResource(appCompatActivity.getResources(), R.drawable.piou);
         this.pPiou = Bitmap.createScaledBitmap(pPiou, (int) (pPiou.getWidth() * 0.6), (int) (pPiou.getHeight() * 0.6), true);
+        this.soundManager = new SoundManager(appCompatActivity);
     }
 
     private Timer timer;
-
 
         private TimerTask timerTask = new TimerTask() {
 
@@ -39,6 +40,9 @@ public class ProjectileManager {
                         spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - pPiou.getWidth() / 2,
                         spaceShip.getShipPosY() - pPiou.getHeight(),
                         pPiou);
+
+                //soundManager.stop();
+                soundManager.start();
 
                 synchronized (playerPiouList) {
                     playerPiouList.add(piou);

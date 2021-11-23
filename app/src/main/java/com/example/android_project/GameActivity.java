@@ -41,4 +41,5 @@ public class GameActivity extends AppCompatActivity {
         gameView = new GameView(this);
         gameLayout.addView(gameView);
     }
+
 }
