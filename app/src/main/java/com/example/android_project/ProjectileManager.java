@@ -10,21 +10,21 @@ import java.util.TimerTask;
 
 public class ProjectileManager {
 
-    private static int shootFrequency = 650;
+    private static int shootFrequency = 400;
 
     private GameActivity appCompatActivity;
     private SoundManager soundManager;
     private List<Projectile> playerPiouList = new ArrayList<Projectile>();
     private Projectile piou;
-    private Bitmap pPiou;
+    private Bitmap piouBitmap;
     private SpaceShip spaceShip;
 
     public ProjectileManager(GameActivity appCompatActivity, SpaceShip spaceShip) {
         this.appCompatActivity = appCompatActivity;
         this.spaceShip = spaceShip;
 
-        this.pPiou = BitmapFactory.decodeResource(appCompatActivity.getResources(), R.drawable.piou);
-        this.pPiou = Bitmap.createScaledBitmap(pPiou, (int) (pPiou.getWidth() * 0.6), (int) (pPiou.getHeight() * 0.6), true);
+        this.piouBitmap = BitmapFactory.decodeResource(appCompatActivity.getResources(), R.drawable.piou);
+        this.piouBitmap = Bitmap.createScaledBitmap(piouBitmap, (int) (piouBitmap.getWidth() * 0.6), (int) (piouBitmap.getHeight() * 0.6), true);
         this.soundManager = new SoundManager(appCompatActivity);
     }
 
@@ -38,12 +38,13 @@ public class ProjectileManager {
                 // L'intervalle en question est spécifié par la variable 'shootFrequency'
 
                 piou = new Projectile(
-                        spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - pPiou.getWidth() / 2,
-                        spaceShip.getShipPosY() - pPiou.getHeight(),
-                        pPiou);
+                        spaceShip.getShipPosX() + spaceShip.getBitmap().getWidth() / 2 - piouBitmap.getWidth() / 2,
+                        spaceShip.getShipPosY() - piouBitmap.getHeight(),
+                        piouBitmap);
 
+                // A régler
                 //soundManager.stop();
-                soundManager.start();
+                //soundManager.start();
 
                 synchronized (playerPiouList) {
                     playerPiouList.add(piou);
@@ -76,12 +77,12 @@ public class ProjectileManager {
         this.playerPiouList = piouList;
     }
 
-    public Bitmap getpPiou() {
-        return pPiou;
+    public Bitmap getPiouBitmap() {
+        return piouBitmap;
     }
 
-    public void setpPiou(Bitmap pPiou) {
-        this.pPiou = pPiou;
+    public void setPiouBitmap(Bitmap piouBitmap) {
+        this.piouBitmap = piouBitmap;
     }
 
 

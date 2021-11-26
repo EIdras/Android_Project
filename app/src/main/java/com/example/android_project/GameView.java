@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
+import android.icu.text.Edits;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,26 +17,26 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.ActionBar;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
 
-    private Thread gameThread;
-    private GameActivity appCompatActivity;
-    private SurfaceHolder surfaceHolder;
-    private Path path;
-    private int score;
-    private boolean gameOver;
-    private boolean isRunning;
+    private Thread              gameThread;
+    private GameActivity        appCompatActivity;
+    private SurfaceHolder       surfaceHolder;
+    private Path                path;
+    private int                 score;
+    private boolean             gameOver;
+    private boolean             isRunning;
+    private float               shipIconWidth, shipIconHeight, bgIconHeight;
 
-    Paint paint;
-
-    SpaceShip playerShip;
-    ProjectileManager projectileManager;
-    float shipIconWidth, shipIconHeight,
-            bgIconHeight;
-
-    Bitmap bg, ship;
+    private Paint               paint;
+    private SpaceShip           playerShip;
+    private ProjectileManager   projectileManager;
+    private EnemyManager        enemyManager;
+    private ScoreManager        scoreManager;
+    private Bitmap              bg, ship;
 
 
     public GameView(GameActivity appCompatActivity) {
@@ -67,6 +68,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         playerShip = new SpaceShip(MainActivity.SCREEN_WIDTH /2 - shipIconWidth / 2, MainActivity.SCREEN_HEIGHT /2 + shipIconHeight, ship);
         projectileManager = new ProjectileManager(appCompatActivity, playerShip);
+        enemyManager = new EnemyManager(appCompatActivity);
+        scoreManager = new ScoreManager();
 
 
         Bitmap bitmap = Bitmap.createBitmap(24, 24, Bitmap.Config.ARGB_8888);
@@ -95,28 +98,36 @@ public class GameView extends SurfaceView implements Runnable {
         Canvas canvas;
 
         projectileManager.start();
-
+        List<Projectile> piouList;
+        enemyManager.start();
+        List<EnemyShip> enemyList;
+        scoreManager.start();
 
         score = 0;
         while(!gameOver && isRunning){
             if (surfaceHolder.getSurface().isValid()) {
 
-                // POUR TESTER
+                long startingTime = System.currentTimeMillis();
+
+                /*
+                // POUR TESTER LA VIE DU JOUEUR
                 if(Math.random() < 0.08) {
                     Log.e("health", "Vie du joueur - "+playerShip.getHealth()+" / 100 HP");
                     playerShip.setHealth(playerShip.getHealth()-1);
                 }
+                */
+
 
                 canvas = surfaceHolder.lockCanvas();
                 canvas.drawColor(Color.BLACK); // Pour 'clear' le canvas
                 canvas.save();
 
+
                 canvas.drawBitmap(bg, 0, 0, paint);                                         // Affiche l'image de fond d'écran (espace) sur le Canvas
                 canvas.drawBitmap(ship, playerShip.getShipPosX(), playerShip.getShipPosY(), paint);   // Affiche le vaisseau à sa position définie dans la classe SpaceShip
-                drawLifeBar(canvas);
 
 
-                List<Projectile> piouList = projectileManager.getPiouList();
+                piouList = projectileManager.getPiouList();
                 synchronized (piouList) {
                     for (Projectile p : piouList) {
                         if (p.getPiouPosY() < -50) {
@@ -129,13 +140,60 @@ public class GameView extends SurfaceView implements Runnable {
                     }
                 }
 
+                synchronized (enemyManager.getEnemyShipList()) {
+
+                    Iterator<EnemyShip> enemyIterator = enemyManager.getEnemyShipList().iterator();
+                    while (enemyIterator.hasNext()) {
+                        EnemyShip enemy = enemyIterator.next();
+                            if (enemy.getShipPosY() > MainActivity.SCREEN_HEIGHT){
+                                enemyIterator.remove();
+                            } else {
+                                canvas.drawBitmap(enemy.getBitmap(), enemy.getShipPosX(), enemy.getShipPosY(), paint);
+                                enemy.setShipPosY(enemy.getShipPosY() + enemy.getVelocity_Y());
+                            }
+                        }
+
+                    /*
+                    foreach : for (EnemyShip enemy : enemyList){
+                        if (enemy.getShipPosY() > MainActivity.SCREEN_HEIGHT){
+                            enemyList.remove(enemy);
+                            continue foreach;
+                        } else {
+                            canvas.drawBitmap(enemy.getBitmap(), enemy.getShipPosX(), enemy.getShipPosY(), paint);
+                            enemy.setShipPosY(enemy.getShipPosY() + enemy.getVelocity_Y());
+                        }
+                    }
+                    */
+                }
+
+                // Dessin de l'UI
+                drawLifeBar(canvas);
+                drawPlayerScore(canvas);
+
                 path.rewind();
                 canvas.restore();
                 surfaceHolder.unlockCanvasAndPost(canvas);
+                score = scoreManager.getScore();
+
+                Log.e("Rect",playerShip.getHitBox().toString());
+
                 isGameOver();
             }
 
         }
+    }
+
+    private void drawPlayerScore(Canvas canvas) {
+
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(4);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(64);
+
+        float xPos = (canvas.getWidth() / 2);
+        float yPos = (float) (MainActivity.SCREEN_HEIGHT * 0.9);
+
+        canvas.drawText(String.valueOf(score),xPos,yPos, paint);
     }
 
     private void isGameOver() {
@@ -197,7 +255,7 @@ public class GameView extends SurfaceView implements Runnable {
         // La barre verte représente la vie du joueur
         paint.setColor(Color.GREEN);
 
-        canvas.drawRect(x1+barPadd, y1+barPadd, (padding+barPadd+greenBarSize)*ratioHP, y2-barPadd, paint);
+        canvas.drawRect(x1+barPadd, y1+barPadd, padding+barPadd+(greenBarSize*ratioHP), y2-barPadd, paint);
 
     }
 

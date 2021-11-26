@@ -1,6 +1,7 @@
 package com.example.android_project;
 
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 
 public class SpaceShip {
 
@@ -47,5 +48,9 @@ public class SpaceShip {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public Rect getHitBox(){
+        return new Rect((int)shipPosX,(int)shipPosY,(int)shipPosX + bitmap.getWidth(), (int)shipPosY + bitmap.getHeight());
     }
 }
