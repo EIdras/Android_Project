@@ -32,7 +32,7 @@ public class EnemyManager {
         @Override
         public void run() {
             if(isEnemyCreationRequired()){
-                float posX = (float) (Math.random() * MainActivity.SCREEN_HEIGHT);          // Génère la position X de l'ennemi entre 0 et la taille max de l'écran
+                float posX = (float) (Math.random() * (MainActivity.SCREEN_WIDTH - shipBitmap.getWidth()));          // Génère la position X de l'ennemi entre 0 et la taille max de l'écran
                 enemyShip = new EnemyShip(posX, - shipBitmap.getHeight(), shipBitmap ,15 ,15);
                 synchronized (enemyShipList){
                     enemyShipList.add(enemyShip);

@@ -1,5 +1,6 @@
 package com.example.android_project;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,15 +8,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
-import android.icu.text.Edits;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
 
 import java.util.Iterator;
 import java.util.List;
@@ -98,73 +101,23 @@ public class GameView extends SurfaceView implements Runnable {
         Canvas canvas;
 
         projectileManager.start();
-        List<Projectile> piouList;
         enemyManager.start();
-        List<EnemyShip> enemyList;
         scoreManager.start();
 
         score = 0;
         while(!gameOver && isRunning){
             if (surfaceHolder.getSurface().isValid()) {
 
-                long startingTime = System.currentTimeMillis();
-
-                /*
-                // POUR TESTER LA VIE DU JOUEUR
-                if(Math.random() < 0.08) {
-                    Log.e("health", "Vie du joueur - "+playerShip.getHealth()+" / 100 HP");
-                    playerShip.setHealth(playerShip.getHealth()-1);
-                }
-                */
-
-
                 canvas = surfaceHolder.lockCanvas();
                 canvas.drawColor(Color.BLACK); // Pour 'clear' le canvas
                 canvas.save();
 
-
                 canvas.drawBitmap(bg, 0, 0, paint);                                         // Affiche l'image de fond d'écran (espace) sur le Canvas
-                canvas.drawBitmap(ship, playerShip.getShipPosX(), playerShip.getShipPosY(), paint);   // Affiche le vaisseau à sa position définie dans la classe SpaceShip
+                canvas.drawBitmap(ship, playerShip.getShipPosX(), playerShip.getShipPosY(), paint); // Affiche le vaisseau à sa position définie dans la classe SpaceShip
 
-
-                piouList = projectileManager.getPiouList();
-                synchronized (piouList) {
-                    for (Projectile p : piouList) {
-                        if (p.getPiouPosY() < -50) {
-                            piouList.remove(p);                                                         // Retire le projectile de la liste lorsequ'il est sorti de l'écran
-                            break;
-                        } else {
-                            canvas.drawBitmap(p.getBitmap(), p.getPiouPosX(), p.getPiouPosY(), paint);  // Affiche chaque projectile sur le Canvas
-                            p.setPiouPosY(p.getPiouPosY() - p.getVelocity());                           // Permet d'actualiser la position de chaque projectile (en Y) suivant leur vitesse
-                        }
-                    }
-                }
-
-                synchronized (enemyManager.getEnemyShipList()) {
-
-                    Iterator<EnemyShip> enemyIterator = enemyManager.getEnemyShipList().iterator();
-                    while (enemyIterator.hasNext()) {
-                        EnemyShip enemy = enemyIterator.next();
-                            if (enemy.getShipPosY() > MainActivity.SCREEN_HEIGHT){
-                                enemyIterator.remove();
-                            } else {
-                                canvas.drawBitmap(enemy.getBitmap(), enemy.getShipPosX(), enemy.getShipPosY(), paint);
-                                enemy.setShipPosY(enemy.getShipPosY() + enemy.getVelocity_Y());
-                            }
-                        }
-
-                    /*
-                    foreach : for (EnemyShip enemy : enemyList){
-                        if (enemy.getShipPosY() > MainActivity.SCREEN_HEIGHT){
-                            enemyList.remove(enemy);
-                            continue foreach;
-                        } else {
-                            canvas.drawBitmap(enemy.getBitmap(), enemy.getShipPosX(), enemy.getShipPosY(), paint);
-                            enemy.setShipPosY(enemy.getShipPosY() + enemy.getVelocity_Y());
-                        }
-                    }
-                    */
-                }
+                // Gestion des projectiles et des ennemis (Calculs + affichage)
+                manageProjectiles(canvas);
+                manageEnemies(canvas);
 
                 // Dessin de l'UI
                 drawLifeBar(canvas);
@@ -175,11 +128,51 @@ public class GameView extends SurfaceView implements Runnable {
                 surfaceHolder.unlockCanvasAndPost(canvas);
                 score = scoreManager.getScore();
 
-                Log.e("Rect",playerShip.getHitBox().toString());
-
                 isGameOver();
             }
+        }
 
+        if (gameOver){
+            // Permet d'afficher le toast sur le thread UI
+            ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                Toast.makeText(getContext(), "PERDU GROS NUL", Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
+    private void manageEnemies(Canvas canvas) {
+        synchronized (enemyManager.getEnemyShipList()) {
+            Iterator<EnemyShip> enemyIterator = enemyManager.getEnemyShipList().iterator();
+            while (enemyIterator.hasNext()) {
+                EnemyShip enemy = enemyIterator.next();
+                    if (enemy.getShipPosY() > MainActivity.SCREEN_HEIGHT){
+                        enemyIterator.remove();
+                    }
+                    else if (enemy.getHitBox().intersect(playerShip.getHitBox())){
+                        enemyIterator.remove();
+                        playerShip.setHealth(playerShip.getHealth() - 10);
+                    }
+                    else {
+                        canvas.drawBitmap(enemy.getBitmap(), enemy.getShipPosX(), enemy.getShipPosY(), paint);
+                        enemy.setShipPosY(enemy.getShipPosY() + enemy.getVelocity_Y());
+                    }
+                }
+
+        }
+    }
+
+    private void manageProjectiles(Canvas canvas) {
+        synchronized (projectileManager.getPiouList()) {
+            Iterator<Projectile> projectileIterator = projectileManager.getPiouList().iterator();
+            while (projectileIterator.hasNext()){
+                Projectile p = projectileIterator.next();
+                if (p.getPiouPosY() < -50) {
+                    projectileIterator.remove();                                                   // Retire le projectile de la liste lorsequ'il est sorti de l'écran
+                } else {
+                    canvas.drawBitmap(p.getBitmap(), p.getPiouPosX(), p.getPiouPosY(), paint);      // Affiche chaque projectile sur le Canvas
+                    p.setPiouPosY(p.getPiouPosY() - p.getVelocity());                               // Permet d'actualiser la position de chaque projectile (en Y) suivant leur vitesse
+                }
+            }
         }
     }
 

@@ -8,8 +8,8 @@ public class SpaceShip {
     public static final int MAX_HEALTH = 100;
     private float shipPosX;
     private float shipPosY;
-    Bitmap bitmap;
-    int health;
+    private Bitmap bitmap;
+    private int health;
 
     public SpaceShip(float shipPosX, float shipPosY, Bitmap bitmap) {
         this.shipPosX = shipPosX;

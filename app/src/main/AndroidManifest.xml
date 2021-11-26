@@ -11,11 +11,11 @@
         android:theme="@style/Theme.Android_Project">
         <activity
             android:name=".GameActivity"
+            android:exported="true"
+            android:fitsSystemWindows="false"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
-            android:fitsSystemWindows="false"
-            android:exported="true"
-            android:theme="@style/fullscreen"/>
+            android:theme="@style/fullscreen" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -29,7 +29,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

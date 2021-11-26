@@ -1,6 +1,7 @@
 package com.example.android_project;
 
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
@@ -58,6 +59,10 @@ public class Projectile {
                 "piouPosX=" + piouPosX +
                 ", piouPosY=" + piouPosY +
                 '}';
+    }
+
+    public Rect getHitBox(){
+        return new Rect((int)piouPosX,(int)piouPosY,(int)piouPosX + bitmap.getWidth(), (int)piouPosY + bitmap.getHeight());
     }
 }
 

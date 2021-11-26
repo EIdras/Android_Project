@@ -1,6 +1,7 @@
 package com.example.android_project;
 
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 
 public class EnemyShip extends SpaceShip{
 
@@ -27,5 +28,9 @@ public class EnemyShip extends SpaceShip{
 
     public void setVelocity_X(int velocity_X) {
         this.velocity_X = velocity_X;
+    }
+
+    public Rect getHitBox(){
+       return super.getHitBox();
     }
 }

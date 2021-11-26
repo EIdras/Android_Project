@@ -10,7 +10,7 @@ import java.util.TimerTask;
 
 public class ProjectileManager {
 
-    private static int shootFrequency = 400;
+    private static int shootFrequency = 200;
 
     private GameActivity appCompatActivity;
     private SoundManager soundManager;
