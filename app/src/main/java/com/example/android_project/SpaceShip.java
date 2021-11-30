@@ -46,12 +46,8 @@ public class SpaceShip {
         return health;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
     public void looseHealth(int loosedHP){
-        if (health - loosedHP == 0) health = 0;
+        if (health - loosedHP < 0) health = 0;
         else health -= loosedHP;
     }
 

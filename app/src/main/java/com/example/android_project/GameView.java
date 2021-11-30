@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -132,6 +133,8 @@ public class GameView extends SurfaceView implements Runnable {
                 surfaceHolder.unlockCanvasAndPost(canvas);
                 score = scoreManager.getScore();
 
+                Log.e("Vie", playerShip.getHealth()+"");
+
                 isGameOver();
             }
         }
@@ -150,11 +153,13 @@ public class GameView extends SurfaceView implements Runnable {
                 EnemyShip enemy = enemyIterator.next();
                     if (enemy.getShipPosY() > MainActivity.SCREEN_HEIGHT){
                         playerShip.looseHealth(4);
+                        Log.e("Vie perdue", "Valeur 4");
                         enemyIterator.remove();
                     }
                     else if (enemy.getHitBox().intersect(playerShip.getHitBox())){
                         enemyIterator.remove();
                         playerShip.looseHealth(10);
+                        Log.e("Vie perdue", "Valeur 10");
                     }
                     else {
                         synchronized (projectileManager.getPiouList()) {

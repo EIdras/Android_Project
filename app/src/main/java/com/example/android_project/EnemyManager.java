@@ -27,19 +27,8 @@ public class EnemyManager {
     }
 
     private Timer timer;
+    private TimerTask timerTask;
 
-    private TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            if(isEnemyCreationRequired()){
-                float posX = (float) (Math.random() * (MainActivity.SCREEN_WIDTH - shipBitmap.getWidth()));          // Génère la position X de l'ennemi entre 0 et la taille max de l'écran
-                enemyShip = new EnemyShip(posX, - shipBitmap.getHeight(), shipBitmap ,15 ,15);
-                synchronized (enemyShipList){
-                    enemyShipList.add(enemyShip);
-                }
-            }
-        }
-    };
 
     private boolean isEnemyCreationRequired() {
         //TODO: Calculer si un ennemi doit être créé, en fonction
@@ -55,6 +44,18 @@ public class EnemyManager {
     public void start() {
         if (timer != null) {  return; }
         timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if(isEnemyCreationRequired()){
+                    float posX = (float) (Math.random() * (MainActivity.SCREEN_WIDTH - shipBitmap.getWidth()));          // Génère la position X de l'ennemi entre 0 et la taille max de l'écran
+                    enemyShip = new EnemyShip(posX, - shipBitmap.getHeight(), shipBitmap ,15 ,15);
+                    synchronized (enemyShipList){
+                        enemyShipList.add(enemyShip);
+                    }
+                }
+            }
+        };
         timer.scheduleAtFixedRate(timerTask, 0, 400);
 
     }
