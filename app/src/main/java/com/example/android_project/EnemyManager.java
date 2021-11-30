@@ -55,13 +55,18 @@ public class EnemyManager {
     public void start() {
         if (timer != null) {  return; }
         timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 600);
+        timer.scheduleAtFixedRate(timerTask, 0, 400);
 
     }
 
     public void stop() {
         timer.cancel();
         timer = null;
+    }
+
+    public void pause(){
+        // Stopper son ici
+        stop();
     }
 
     public List<EnemyShip> getEnemyShipList() {

@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 public class Projectile {
 
-    private static final int DEFAULT_VELOCITY = 50;
+    private static final int DEFAULT_VELOCITY = 75;
     private float piouPosX;
     private float piouPosY;
     Bitmap bitmap;

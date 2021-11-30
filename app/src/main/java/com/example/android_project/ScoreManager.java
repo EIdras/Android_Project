@@ -7,16 +7,15 @@ public class ScoreManager {
     int score = 0;
     private Timer timer;
 
-    private TimerTask timerTask = new TimerTask() {
-
-        @Override
-        public void run() {
-            score ++;
-        }
-    };
-
+    private TimerTask timerTask;
 
     public void start() {
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                score ++;
+            }
+        };
         if (timer != null) {
             return;
         }
@@ -28,7 +27,7 @@ public class ScoreManager {
 
     public void stop() {
         timer.cancel();
-        timer = null;
+        //timer = null;
     }
 
     public int getScore() {

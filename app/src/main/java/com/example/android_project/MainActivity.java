@@ -19,6 +19,18 @@ public class MainActivity extends AppCompatActivity {
     public static int SCREEN_HEIGHT = 0;
     private Button playBtn;
 
+    // TODO List :
+    //  Gérer les onPause / onResume / onStop avec le son
+    //  Ajouter une page de fin de jeu
+    //  Ajouter une page de classement
+    //  Gérer les scores avec Firebase
+    //  Ajouter des options (?) Dark mode / Sons et musique / Skins débloquables avec des points calculés sur le score
+    //  Ajouter des features de gameplay (différents ennemis, bonus de tir, tir spéciaux...)
+    //  Ajouter une musique de fond et des bruitages pour les vaisseaux
+    //  Redimensionner le fond d'écran pour qu'il s'adapte à l'échelle de chaque écran
+    //  Gérer la génération d'ennemis
+    //  Ajouter une proba que l'ennemi se transforme en coeur (vie) quand il est tué
+
 
 
     @Override
@@ -40,5 +52,16 @@ public class MainActivity extends AppCompatActivity {
     public void openActivity(Class classToOpen){
         Intent intent = new Intent(this, classToOpen);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 }

@@ -50,6 +50,11 @@ public class SpaceShip {
         this.health = health;
     }
 
+    public void looseHealth(int loosedHP){
+        if (health - loosedHP == 0) health = 0;
+        else health -= loosedHP;
+    }
+
     public Rect getHitBox(){
         return new Rect((int)shipPosX,(int)shipPosY,(int)shipPosX + bitmap.getWidth(), (int)shipPosY + bitmap.getHeight());
     }

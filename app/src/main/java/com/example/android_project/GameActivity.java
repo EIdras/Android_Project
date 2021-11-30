@@ -1,5 +1,6 @@
 package com.example.android_project;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -42,4 +43,8 @@ public class GameActivity extends AppCompatActivity {
         gameLayout.addView(gameView);
     }
 
+    private void endGame(){
+        Intent intent = new Intent(getApplicationContext(), GameEnd.class);
+        startActivity(intent);
+    }
 }

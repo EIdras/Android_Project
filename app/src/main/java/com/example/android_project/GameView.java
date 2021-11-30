@@ -1,6 +1,5 @@
 package com.example.android_project;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,8 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Looper;
-import android.util.Log;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,7 +19,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 
 import java.util.Iterator;
-import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -88,21 +85,28 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        projectileManager.pause();
+        enemyManager.pause();
+        scoreManager.stop();
     }
 
     public void resume(){
         isRunning = true;
         gameThread = new Thread(this);
         gameThread.start();
+
+        scoreManager.start();
+
+        projectileManager.start();
+        enemyManager.start();
     }
 
     @Override
     public void run() {
         Canvas canvas;
 
-        projectileManager.start();
-        enemyManager.start();
-        scoreManager.start();
+
 
         score = 0;
         while(!gameOver && isRunning){
@@ -134,9 +138,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         if (gameOver){
             // Permet d'afficher le toast sur le thread UI
-            ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                Toast.makeText(getContext(), "PERDU GROS NUL", Toast.LENGTH_SHORT).show();
-            });
+
+            ContextCompat.getMainExecutor(getContext()).execute(() -> Toast.makeText(getContext(), "PERDU GROS NUL", Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -146,13 +149,26 @@ public class GameView extends SurfaceView implements Runnable {
             while (enemyIterator.hasNext()) {
                 EnemyShip enemy = enemyIterator.next();
                     if (enemy.getShipPosY() > MainActivity.SCREEN_HEIGHT){
+                        playerShip.looseHealth(4);
                         enemyIterator.remove();
                     }
                     else if (enemy.getHitBox().intersect(playerShip.getHitBox())){
                         enemyIterator.remove();
-                        playerShip.setHealth(playerShip.getHealth() - 10);
+                        playerShip.looseHealth(10);
                     }
                     else {
+                        synchronized (projectileManager.getPiouList()) {
+                            Iterator<Projectile> projectileIterator = projectileManager.getPiouList().iterator();
+                            while (projectileIterator.hasNext()) {
+                                Projectile p = projectileIterator.next();
+                                if ((enemy.getHitBox().intersect(p.getHitBox())) && enemyManager.getEnemyShipList().contains(enemy)){
+                                    projectileIterator.remove();
+                                    // TODO : faire du son
+                                    enemyIterator.remove();
+                                    scoreManager.setScore(scoreManager.getScore() + 5);
+                                }
+                            }
+                        }
                         canvas.drawBitmap(enemy.getBitmap(), enemy.getShipPosX(), enemy.getShipPosY(), paint);
                         enemy.setShipPosY(enemy.getShipPosY() + enemy.getVelocity_Y());
                     }
@@ -217,7 +233,9 @@ public class GameView extends SurfaceView implements Runnable {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        appCompatActivity.getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                appCompatActivity.getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            }
     }
 
 
@@ -234,7 +252,6 @@ public class GameView extends SurfaceView implements Runnable {
     float y2 = MainActivity.SCREEN_HEIGHT - padding;
 
     private void drawLifeBar(Canvas canvas){
-
 
         int maxHP       = SpaceShip.MAX_HEALTH  ;
         int actualHP    = playerShip.getHealth();

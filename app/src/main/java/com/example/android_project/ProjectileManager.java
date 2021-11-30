@@ -10,7 +10,7 @@ import java.util.TimerTask;
 
 public class ProjectileManager {
 
-    private static int shootFrequency = 200;
+    private static int shootFrequency = 350;
 
     private GameActivity appCompatActivity;
     private SoundManager soundManager;
@@ -29,8 +29,11 @@ public class ProjectileManager {
     }
 
     private Timer timer;
+    private TimerTask timerTask;
 
-        private TimerTask timerTask = new TimerTask() {
+    public void start() {
+
+        timerTask = new TimerTask() {
 
             @Override
             public void run() {
@@ -42,9 +45,7 @@ public class ProjectileManager {
                         spaceShip.getShipPosY() - piouBitmap.getHeight(),
                         piouBitmap);
 
-                // A régler
-                //soundManager.stop();
-                //soundManager.start();
+                soundManager.piouSound();
 
                 synchronized (playerPiouList) {
                     playerPiouList.add(piou);
@@ -52,9 +53,6 @@ public class ProjectileManager {
             }
         };
 
-
-
-    public void start() {
         if (timer != null) {
             return;
         }
@@ -73,17 +71,9 @@ public class ProjectileManager {
         return playerPiouList;
     }
 
-    public void setPiouList(List<Projectile> piouList) {
-        this.playerPiouList = piouList;
+
+    public void pause() {
+        soundManager.pause();
+        stop();
     }
-
-    public Bitmap getPiouBitmap() {
-        return piouBitmap;
-    }
-
-    public void setPiouBitmap(Bitmap piouBitmap) {
-        this.piouBitmap = piouBitmap;
-    }
-
-
 }
