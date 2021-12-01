@@ -1,5 +1,6 @@
 package com.example.android_project;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -143,6 +144,7 @@ public class GameView extends SurfaceView implements Runnable {
             // Permet d'afficher le toast sur le thread UI
 
             ContextCompat.getMainExecutor(getContext()).execute(() -> Toast.makeText(getContext(), "PERDU GROS NUL", Toast.LENGTH_SHORT).show());
+            appCompatActivity.endGame(scoreManager.getScore());
         }
     }
 

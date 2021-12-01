@@ -64,4 +64,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

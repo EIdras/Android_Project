@@ -43,8 +43,14 @@ public class GameActivity extends AppCompatActivity {
         gameLayout.addView(gameView);
     }
 
-    private void endGame(){
+    void endGame(int score){
         Intent intent = new Intent(getApplicationContext(), GameEnd.class);
+        intent.putExtra("score",score);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
