@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "123344046176",
+    "project_id": "space-piou",
+    "storage_bucket": "space-piou.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123344046176:android:e234606b05f75f7c0f1b05",
+        "android_client_info": {
+          "package_name": "com.example.android_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123344046176-65jebt2vieff77do8rl3902bgshk3qih.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPwaQ5EPJSWqS0AFzjAx7EEKdaq0-DRE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123344046176-65jebt2vieff77do8rl3902bgshk3qih.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

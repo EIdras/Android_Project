@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android_Project">
         <activity
+            android:name=".LeaderboardActivity"
+            android:exported="true"
+            android:label="@string/title_activity_leaderboard"
+            android:theme="@style/Theme.Android_Project.NoActionBar" />
+        <activity
             android:name=".GameEnd"
             android:exported="false" />
         <activity

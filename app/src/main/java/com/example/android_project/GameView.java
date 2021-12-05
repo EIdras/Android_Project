@@ -134,15 +134,12 @@ public class GameView extends SurfaceView implements Runnable {
                 surfaceHolder.unlockCanvasAndPost(canvas);
                 score = scoreManager.getScore();
 
-                Log.e("Vie", playerShip.getHealth()+"");
-
                 isGameOver();
             }
         }
 
         if (gameOver){
             // Permet d'afficher le toast sur le thread UI
-
             ContextCompat.getMainExecutor(getContext()).execute(() -> Toast.makeText(getContext(), "PERDU GROS NUL", Toast.LENGTH_SHORT).show());
             appCompatActivity.endGame(scoreManager.getScore());
         }
