@@ -1,8 +1,16 @@
 package com.example.android_project;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.firebase.ui.database.SnapshotParser;
+import com.google.firebase.FirebaseError;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ScoreDataBase {
 
@@ -36,9 +44,37 @@ public class ScoreDataBase {
         return databaseReference.child(PATH_LEADERBOARD);
     }
 
-
     public void addScore(int score){
-        databaseReference.child(PATH_LEADERBOARD).push().setValue(new Score(pseudo, score));
+        Log.e("clé", getSnapShotParser().toString());
+        databaseReference.child(PATH_LEADERBOARD).child(pseudo).child("score").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                try {
+                    if (snapshot.getValue() != null) {
+                        try {
+                            Log.e("TAG", "if ("+score+ " > " + snapshot.getValue() + ")"); // Récupère la valeur du score
+                            if (score > Math.toIntExact((long)snapshot.getValue())){
+                                databaseReference.child(PATH_LEADERBOARD).child(pseudo).setValue(new Score(pseudo, score));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.e("TAG", " it's null.");
+                        databaseReference.child(PATH_LEADERBOARD).child(pseudo).setValue(new Score(pseudo, score));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("onCancelled", " cancelled");
+            }
+        });
+
+
     }
 
 }

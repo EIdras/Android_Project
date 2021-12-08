@@ -26,7 +26,7 @@ public class GameEnd extends AppCompatActivity {
 
         scoreView = findViewById(R.id.scoreView);
         scoreView.setText(""+score);
-        scoreDataBase = new ScoreDataBase("Simon");
+        scoreDataBase = new ScoreDataBase(MainActivity.PSEUDO);
         addScoreToDB(score);
 
         menuBtn = findViewById(R.id.menuBtn);
@@ -43,8 +43,7 @@ public class GameEnd extends AppCompatActivity {
 
     public void addScoreToDB(int score){
         // Créée une nouvelle instance de Score
-        String pseudo = "Simon"; // A remplacer
-        Score newScore = new Score(pseudo, score);
+        Score newScore = new Score(MainActivity.PSEUDO, score);
         scoreDataBase.addScore(score);
     }
 }

@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Android_Project">
+        <activity android:name=".SignInActivity"/>
         <activity
             android:name=".LeaderboardActivity"
             android:exported="true"
-            android:label="@string/title_activity_leaderboard"
+            android:label="@string/leaderboard"
             android:theme="@style/Theme.Android_Project.NoActionBar" />
         <activity
             android:name=".GameEnd"

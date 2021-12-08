@@ -37,6 +37,10 @@ public class GameActivity extends AppCompatActivity {
         gameView.resume();
     }
 
+    public GameView getGameView() {
+        return gameView;
+    }
+
     private void prepareGame(){
         gameLayout = new FrameLayout(this);
         gameView = new GameView(this);

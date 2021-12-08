@@ -40,6 +40,12 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-database:20.0.3'
     implementation 'com.firebaseui:firebase-ui-database:4.2.0' // UI
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+
+    // Google auth
+    implementation 'com.google.firebase:firebase-auth:19.4.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

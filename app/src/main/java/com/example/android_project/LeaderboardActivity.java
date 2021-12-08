@@ -52,7 +52,7 @@ public class LeaderboardActivity extends AppCompatActivity {
 
 
         // Instantiation de la Firebase reference
-        ScoreDataBase scoreDataBase = new ScoreDataBase("Simon");
+        ScoreDataBase scoreDataBase = new ScoreDataBase(MainActivity.PSEUDO);
         databaseReference = scoreDataBase.getDatabaseReferenceOfScores();
         SnapshotParser<Score> parser = scoreDataBase.getSnapShotParser();
 
@@ -60,8 +60,8 @@ public class LeaderboardActivity extends AppCompatActivity {
         // TODO : Ne fonctionne pas
         // Connecte l'interface avec Firebase en faisant une requete pour toutes les entrées dans Leaderboard
         FirebaseRecyclerOptions<Score> options = new FirebaseRecyclerOptions.Builder<Score>().
-                setQuery(this.databaseReference.child(ScoreDataBase.PATH_LEADERBOARD), parser).build();
-        Log.e("tamer","options");
+                setQuery(this.databaseReference, parser).build();
+
         firebaseAdapter = new FirebaseRecyclerAdapter<Score, ScoreViewHolder>(options) {
             // Utilise les informations dans le message récupéré sur Firebase pour l'afficher
             @Override
@@ -103,5 +103,4 @@ public class LeaderboardActivity extends AppCompatActivity {
         super.onBackPressed();
         onPause();
     }
-
 }

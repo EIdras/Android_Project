@@ -273,5 +273,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
-
+    public int getScore() {
+        return score;
+    }
 }

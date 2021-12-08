@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "123344046176",
+    "firebase_url": "https://space-piou-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "space-piou",
     "storage_bucket": "space-piou.appspot.com"
   },
