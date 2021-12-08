@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -124,6 +126,7 @@ public class GameView extends SurfaceView implements Runnable {
                 // Gestion des projectiles et des ennemis (Calculs + affichage)
                 manageProjectiles(canvas);
                 manageEnemies(canvas);
+                drawExplosions(canvas);
 
                 // Dessin de l'UI
                 drawLifeBar(canvas);
@@ -168,6 +171,7 @@ public class GameView extends SurfaceView implements Runnable {
                                 if ((enemy.getHitBox().intersect(p.getHitBox())) && enemyManager.getEnemyShipList().contains(enemy)){
                                     projectileIterator.remove();
                                     // TODO : faire du son
+                                    createExplosion(enemy);
                                     enemyIterator.remove();
                                     scoreManager.setScore(scoreManager.getScore() + 5);
                                 }
@@ -178,6 +182,47 @@ public class GameView extends SurfaceView implements Runnable {
                     }
                 }
 
+        }
+    }
+
+    private ArrayList<EnemyShip> enemiesToExplode = new ArrayList<>();
+    private void createExplosion(EnemyShip enemy){
+        enemiesToExplode.add(enemy);
+    }
+
+    private void drawExplosions(Canvas canvas){
+        Iterator<EnemyShip> iterator = enemiesToExplode.iterator();
+        while(iterator.hasNext()){
+            EnemyShip current = iterator.next();
+            Bitmap explosion = null;
+            if (current.getNbFramesAfterDeath() == 18){
+                iterator.remove();
+            }
+            int drawable;
+            int frame = current.getNbFramesAfterDeath();
+            if (frame >= 15){
+                drawable = R.drawable.explosion_frame6;
+            }
+            else if (frame >= 12){
+                drawable = R.drawable.explosion_frame5;
+            }
+            else if (frame >= 9){
+                drawable = R.drawable.explosion_frame4;
+            }
+            else if (frame >= 6){
+                drawable = R.drawable.explosion_frame3;
+            }
+            else if (frame >= 3){
+                drawable = R.drawable.explosion_frame2;
+            }
+            else
+                drawable = R.drawable.explosion_frame1;
+
+            explosion = BitmapFactory.decodeResource(appCompatActivity.getResources(), drawable);
+            //explosion.eraseColor(Color.TRANSPARENT);
+            current.incrementNbFramesAfterDeath();
+            explosion = Bitmap.createScaledBitmap(explosion, (int) (current.getBitmap().getWidth()), (int) (current.getBitmap().getHeight()), true);
+            canvas.drawBitmap(explosion, current.getShipPosX(), current.getShipPosY(), paint);
         }
     }
 

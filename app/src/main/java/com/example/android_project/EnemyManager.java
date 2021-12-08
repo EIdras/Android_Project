@@ -33,6 +33,7 @@ public class EnemyManager {
 
     private int enemyCount, actualScore;
     private int maxEnemyNb;
+    private int velocity;
 
     private boolean isEnemyCreationRequired() {
         //TODO: Calculer si un ennemi doit être créé, en fonction
@@ -52,13 +53,17 @@ public class EnemyManager {
 
         if (actualScore <= 10){
             maxEnemyNb = 1;
+            velocity = 15;
         }
         else if (actualScore >= 1000){
             maxEnemyNb = 20;
+            velocity = 30;
         }
         else {
             maxEnemyNb = (int) Math.round(0.02 * actualScore - 0.8); // Fonction mathématique qui définit le nombre d'ennemis max en fonction du score actuel
             if (maxEnemyNb == 0) maxEnemyNb = 1; // Correction lorsque l'arondi d'une valeur inférieure à 0.5 renvoie 0
+            velocity = (int) Math.round(0.015 * actualScore + 14.85);
+            if (velocity < 15) velocity = 15;
         }
         Log.e("Nb Ennemis", "Score : "+actualScore+ " --- Nb Ennemi max : " +maxEnemyNb);
 
@@ -66,7 +71,10 @@ public class EnemyManager {
             return false;
         }
 
-        return true;
+        if (Math.random() < 0.75){
+            return true;
+        }
+        return false;
     }
 
 
@@ -78,14 +86,14 @@ public class EnemyManager {
             public void run() {
                 if(isEnemyCreationRequired()){
                     float posX = (float) (Math.random() * (MainActivity.SCREEN_WIDTH - shipBitmap.getWidth()));          // Génère la position X de l'ennemi entre 0 et la taille max de l'écran
-                    enemyShip = new EnemyShip(posX, - shipBitmap.getHeight(), shipBitmap ,15 ,15);
+                    enemyShip = new EnemyShip(posX, - shipBitmap.getHeight(), shipBitmap ,15 ,velocity);
                     synchronized (enemyShipList){
                         enemyShipList.add(enemyShip);
                     }
                 }
             }
         };
-        timer.scheduleAtFixedRate(timerTask, 0, 400);
+        timer.scheduleAtFixedRate(timerTask, 0, 300);
 
     }
 

@@ -38,20 +38,22 @@ public class MainActivity extends AppCompatActivity {
     public FirebaseUser firebaseUser;
 
     // TODO List :
+    //  Commenter le code
     //  + Gérer les onPause / onResume / onStop avec le son
     //  + Ajouter une page de fin de jeu
     //  + Ajouter une page de classement
     //  + Gérer les scores avec Firebase
-    //  Se connecter avec un compte Google pour les scores
+    //  + Se connecter avec un compte Google pour les scores
     //  Ajouter des options (?) Dark mode / Sons et musique / Skins débloquables avec des points calculés sur le score
     //  Ajouter des features de gameplay (différents ennemis, bonus de tir, tir spéciaux...)
     //  ~ Ajouter une musique de fond et des bruitages pour les vaisseaux
     //  Redimensionner le fond d'écran pour qu'il s'adapte à l'échelle de chaque écran
-    //  ~ Gérer la génération d'ennemis
+    //  + Gérer la génération d'ennemis
+    //  + Animation d'explosion a la mort d'un ennemi
     //  Ajouter une proba que l'ennemi se transforme en coeur (vie) quand il est tué
     //  Faire défiler l'image de fond lentement à l'infini
     //  Ajouter un multiplicateur de points quand pas de dégâts subis pendant un certain temps
-    //  Faire bouger les ennemis de droite à gauche et les accélérer suivant le score
+    //  ~ Faire bouger les ennemis de droite à gauche et les accélérer suivant le score
 
 
 
