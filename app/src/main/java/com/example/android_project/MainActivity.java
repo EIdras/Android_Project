@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static int SCREEN_WIDTH = 0;
     public static int SCREEN_HEIGHT = 0;
     public static String PSEUDO = "Unknown";
+    public static int SKIN;
     private Button playBtn, settingsBtn, leaderboardBtn;
 
     // Variables Firebase
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         leaderboardBtn      = findViewById(R.id.leaderboardBtn);
 
         playBtn.setOnClickListener(v -> openActivity(GameActivity.class));
-        settingsBtn.setOnClickListener(v -> openActivity(GameActivity.class));
+        settingsBtn.setOnClickListener(v -> openActivity(SettingsActivity.class));
         leaderboardBtn.setOnClickListener(v -> openActivity(LeaderboardActivity.class));
 
         Point metrics = new Point();

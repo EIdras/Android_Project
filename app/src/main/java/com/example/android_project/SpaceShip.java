@@ -51,6 +51,11 @@ public class SpaceShip {
         else health -= loosedHP;
     }
 
+    public void winHealth(int wonHP){
+        if (health + wonHP > MAX_HEALTH) health = MAX_HEALTH;
+        else health += wonHP;
+    }
+
     public Rect getHitBox(){
         return new Rect((int)shipPosX,(int)shipPosY,(int)shipPosX + bitmap.getWidth(), (int)shipPosY + bitmap.getHeight());
     }

@@ -1,6 +1,5 @@
 package com.example.android_project;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -40,7 +38,7 @@ public class GameView extends SurfaceView implements Runnable {
     private ProjectileManager   projectileManager;
     private EnemyManager        enemyManager;
     private ScoreManager        scoreManager;
-    private Bitmap              bg, ship;
+    private Bitmap              bg, ship, heart;
 
 
     public GameView(GameActivity appCompatActivity) {
@@ -61,9 +59,9 @@ public class GameView extends SurfaceView implements Runnable {
         paint.setDither(true);
 
         bg = BitmapFactory.decodeResource(appCompatActivity.getResources(), R.drawable.space);
-        ship = BitmapFactory.decodeResource(appCompatActivity.getResources(), R.drawable.spaceship);
-
+        ship = BitmapFactory.decodeResource(appCompatActivity.getResources(), MainActivity.SKIN);
         ship = Bitmap.createScaledBitmap(ship, (int) (ship.getWidth() * 0.3), (int) (ship.getHeight() * 0.3), true);
+        heart = BitmapFactory.decodeResource(appCompatActivity.getResources(), R.drawable.heart);
 
         bgIconHeight = bg.getHeight();
 
@@ -127,6 +125,7 @@ public class GameView extends SurfaceView implements Runnable {
                 manageProjectiles(canvas);
                 manageEnemies(canvas);
                 drawExplosions(canvas);
+                drawHearts(canvas);
 
                 // Dessin de l'UI
                 drawLifeBar(canvas);
@@ -143,7 +142,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         if (gameOver){
             // Permet d'afficher le toast sur le thread UI
-            ContextCompat.getMainExecutor(getContext()).execute(() -> Toast.makeText(getContext(), "PERDU GROS NUL", Toast.LENGTH_SHORT).show());
+            ContextCompat.getMainExecutor(getContext()).execute(() -> Toast.makeText(getContext(), "Perdu !", Toast.LENGTH_SHORT).show());
             appCompatActivity.endGame(scoreManager.getScore());
         }
     }
@@ -159,6 +158,8 @@ public class GameView extends SurfaceView implements Runnable {
                         enemyIterator.remove();
                     }
                     else if (enemy.getHitBox().intersect(playerShip.getHitBox())){
+                        // TODO : faire du son
+                        createExplosion(enemy);
                         enemyIterator.remove();
                         playerShip.looseHealth(10);
                         Log.e("Vie perdue", "Valeur 10");
@@ -172,6 +173,7 @@ public class GameView extends SurfaceView implements Runnable {
                                     projectileIterator.remove();
                                     // TODO : faire du son
                                     createExplosion(enemy);
+                                    if(Math.random() < 0.05) createHeart(enemy);                    // Probabilité qu'un enemi se transforme en coeur a sa mort
                                     enemyIterator.remove();
                                     scoreManager.setScore(scoreManager.getScore() + 5);
                                 }
@@ -182,6 +184,28 @@ public class GameView extends SurfaceView implements Runnable {
                     }
                 }
 
+        }
+    }
+
+    private ArrayList<Heart> hearts = new ArrayList<>();
+    private void createHeart(EnemyShip enemy){
+        Heart newHeart = new Heart(enemy.getShipPosX() + enemy.getBitmap().getWidth() / 2 - heart.getWidth() / 2,
+                enemy.getShipPosY() + enemy.getBitmap().getHeight() / 2 - heart.getHeight() / 2,
+                heart);
+        hearts.add(newHeart);
+    }
+
+    private void drawHearts(Canvas canvas){
+        Iterator<Heart> iterator = hearts.iterator();
+        while(iterator.hasNext()){
+            Heart h = iterator.next();
+            if (h.getPosY() > MainActivity.SCREEN_HEIGHT) iterator.remove();
+            if (h.getHitBox().intersect(playerShip.getHitBox())){
+                playerShip.winHealth(h.getHealthValue());
+                iterator.remove();
+            }
+            canvas.drawBitmap(h.getBitmap(), h.getPosX(), h.getPosY(), paint);
+            h.setPosY(h.getPosY()+10);
         }
     }
 
@@ -219,7 +243,6 @@ public class GameView extends SurfaceView implements Runnable {
                 drawable = R.drawable.explosion_frame1;
 
             explosion = BitmapFactory.decodeResource(appCompatActivity.getResources(), drawable);
-            //explosion.eraseColor(Color.TRANSPARENT);
             current.incrementNbFramesAfterDeath();
             explosion = Bitmap.createScaledBitmap(explosion, (int) (current.getBitmap().getWidth()), (int) (current.getBitmap().getHeight()), true);
             canvas.drawBitmap(explosion, current.getShipPosX(), current.getShipPosY(), paint);

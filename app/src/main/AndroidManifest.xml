@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Android_Project">
-        <activity android:name=".SignInActivity"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true" />
+        <activity android:name=".SignInActivity" />
         <activity
             android:name=".LeaderboardActivity"
             android:exported="true"
