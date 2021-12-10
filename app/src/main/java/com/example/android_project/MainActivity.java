@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         SCREEN_WIDTH = metrics.x;
         SCREEN_HEIGHT = metrics.y;
 
+        SKIN = R.drawable.spaceship_red;
+
     }
 
     public void openActivity(Class classToOpen){

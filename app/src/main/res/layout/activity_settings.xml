@@ -53,7 +53,7 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/divider2"
+                android:id="@+id/divider1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="15dp"
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Choix du vaisseau : "
-                    android:textColor="#000000"
+                    android:textColor="@color/white"
                     android:textSize="20sp" />
 
                 <FrameLayout
@@ -135,6 +135,24 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="15dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:background="?android:attr/listDivider" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/rules_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_button"
+                android:fontFamily="@font/press_start_2p"
+                android:includeFontPadding="false"
+                android:text="Regles du jeu" />
 
         </LinearLayout>
     </ScrollView>

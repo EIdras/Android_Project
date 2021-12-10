@@ -94,6 +94,18 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="game_rules">"SPACE PIOU\n\n
+    Déplacez votre vaisseau spatial avec votre doigt, il suivra votre mouvement. Le vaisseau tire autotmatiquement des lasers.\n
+    Votre vie est représentée en bas de l\'écran par la barre verte, vous possédez au début d\'une partie 100 points de vie.\n
+    Votre score est le nombre affiché au-dessus de la barre de vie, il augmentera avec le temps et lorseque vous détruisez un ennemi.\n
+    Des ennemis sont générés aléatoirement et avancent vers vous. Si un ennemi touche votre vaisseau ou le bas de l\'écran, vous perdrez des points de vie.\n
+    Pour détruire un ennemi, dirigez simplement vos tirs sur lui, il explosera si vous faites mouche.\n
+    Vous avez une certaine chance en détruisant un ennemi qu'il laisse tomber un coeur. Récupérer ce coeur vous permet de récupérer un peu de points de vie.\n
+    Plus votre score est élevé, plus le nombre d'ennemis maximum à l'écran ainsi que la vitesse de chaque ennemi augmente.\n
+    Lorseque vous n'avez plus aucun point de vie, le jeu se termine automatiquement et vous affiche votre score final.\n
+    Si votre score final est supérieur à votre précédent score, il est ajouté au classement en ligne, en utilisant votre nom de compte Google.\n
+    Bonne chance et bon jeu !\n\n\n"
+    </string>
     <string name="action_settings">Settings</string>
     <string name="copyright">🄯 Simon Brault</string>
     <string name="logoiutlaval">LogoIutLaval</string>
