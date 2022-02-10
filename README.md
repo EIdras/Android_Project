@@ -1,3 +1,3 @@
-# Android_Project
-Space Piou
-Projet de développement d'un jeu type shoot'em up sous Android en Java
+# Space-Piou
+
+Projet de développement d'un jeu type shoot'em up spatial entièrement fait sous Android en Java
